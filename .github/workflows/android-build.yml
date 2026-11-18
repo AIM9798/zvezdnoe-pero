@@ -1,0 +1,72 @@
+# Облачная сборка тестового APK.
+# Собирается на серверах GitHub: Unity на своём компьютере не нужна.
+# Готовый APK — в разделе Actions → нужный запуск → Artifacts.
+name: Android APK
+
+on:
+  push:
+    branches: [main, unity-setup]
+    paths: ["Assets/**", "Packages/**", "ProjectSettings/**", ".github/workflows/android-build.yml"]
+  pull_request:
+    paths: ["Assets/**", "Packages/**", "ProjectSettings/**", ".github/workflows/android-build.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Сборка APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Проверить, что ключи Unity добавлены
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          missing=""
+          [ -z "$UNITY_LICENSE" ] && missing="$missing UNITY_LICENSE"
+          [ -z "$UNITY_EMAIL" ] && missing="$missing UNITY_EMAIL"
+          [ -z "$UNITY_PASSWORD" ] && missing="$missing UNITY_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::error::Не добавлены секреты:$missing. Инструкция: docs/cloud-build.md"
+            exit 1
+          fi
+
+      - name: Освободить место на диске
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          android: false
+          large-packages: false
+
+      - uses: actions/checkout@v4
+
+      - name: Кэш Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('Packages/manifest.json', 'ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: Library-Android-
+
+      - name: Сборка в Unity
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          buildMethod: ZvezdnoePero.EditorTools.CiBuild.BuildAndroid
+          buildName: zvezdnoe-pero-test
+          androidExportType: androidPackage
+
+      - name: Выложить APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: zvezdnoe-pero-apk-${{ github.run_number }}
+          path: build/Android/**/*.apk
+          if-no-files-found: error
+          retention-days: 14

@@ -26,6 +26,38 @@ namespace ZvezdnoePero.EditorTools
         [MenuItem("Звёздное перо/1. Настроить проект (Android, URP, ввод)", priority = 1)]
         public static void ConfigureProject()
         {
+            bool inputChanged = ApplySettings();
+
+            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
+            {
+                if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
+                    EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
+            }
+            else
+            {
+                EditorUtility.DisplayDialog(ProductName,
+                    "Модуль Android Build Support не установлен. Добавь его в Unity Hub: Installs → шестерёнка у версии → Add modules → Android Build Support (вместе с OpenJDK и SDK/NDK). Остальные настройки уже применены.",
+                    "Понятно");
+            }
+
+            if (inputChanged &&
+                EditorUtility.DisplayDialog(ProductName,
+                    "Включена новая система ввода. Unity нужно перезапустить проект, чтобы она заработала.",
+                    "Перезапустить", "Позже"))
+            {
+                EditorApplication.OpenProject(Environment.CurrentDirectory);
+                return;
+            }
+
+            Debug.Log($"[{ProductName}] Проект настроен. Следующий шаг: меню «Звёздное перо → 2. Собрать стартовую сцену».");
+        }
+
+        /// <summary>
+        /// Применяет настройки Android, URP и ввода без диалогов (используется и в облачной сборке).
+        /// Возвращает true, если пришлось переключить систему ввода.
+        /// </summary>
+        public static bool ApplySettings()
+        {
             PlayerSettings.companyName = "AIM9798";
             PlayerSettings.productName = ProductName;
             PlayerSettings.bundleVersion = "0.1.0";
@@ -42,40 +74,16 @@ namespace ZvezdnoePero.EditorTools
 
             EnsureUrp();
             ReimportModels();
-
             bool inputChanged = EnableNewInputSystem();
-
-            if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android))
-            {
-                if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
-                    EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android, BuildTarget.Android);
-            }
-            else
-            {
-                EditorUtility.DisplayDialog(ProductName,
-                    "Модуль Android Build Support не установлен. Добавь его в Unity Hub: Installs → шестерёнка у версии → Add modules → Android Build Support (вместе с OpenJDK и SDK/NDK). Остальные настройки уже применены.",
-                    "Понятно");
-            }
-
             AssetDatabase.SaveAssets();
-
-            if (inputChanged &&
-                EditorUtility.DisplayDialog(ProductName,
-                    "Включена новая система ввода. Unity нужно перезапустить проект, чтобы она заработала.",
-                    "Перезапустить", "Позже"))
-            {
-                EditorApplication.OpenProject(Environment.CurrentDirectory);
-                return;
-            }
-
-            Debug.Log($"[{ProductName}] Проект настроен. Следующий шаг: меню «Звёздное перо → 2. Собрать стартовую сцену».");
+            return inputChanged;
         }
 
         [MenuItem("Звёздное перо/2. Собрать стартовую сцену", priority = 2)]
         public static void BuildScene()
         {
             if (GraphicsSettings.defaultRenderPipeline == null) EnsureUrp();
-            if (File.Exists(ScenePath) &&
+            if (File.Exists(ScenePath) && !Application.isBatchMode &&
                 !EditorUtility.DisplayDialog(ProductName,
                     "Сцена Main уже есть. Собрать её заново? Ручные правки в ней пропадут.", "Собрать заново", "Отмена"))
                 return;
