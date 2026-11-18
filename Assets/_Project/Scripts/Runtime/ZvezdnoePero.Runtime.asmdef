@@ -1,0 +1,13 @@
+{
+    "name": "ZvezdnoePero.Runtime",
+    "rootNamespace": "ZvezdnoePero",
+    "references": [
+        "Unity.InputSystem",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "autoReferenced": true,
+    "noEngineReferences": false
+}

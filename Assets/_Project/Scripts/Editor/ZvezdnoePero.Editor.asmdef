@@ -1,0 +1,16 @@
+{
+    "name": "ZvezdnoePero.Editor",
+    "rootNamespace": "ZvezdnoePero.EditorTools",
+    "references": [
+        "ZvezdnoePero.Runtime",
+        "Unity.InputSystem",
+        "UnityEngine.UI",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "autoReferenced": false,
+    "noEngineReferences": false
+}

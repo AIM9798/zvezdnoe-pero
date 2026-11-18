@@ -5,11 +5,15 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Web / Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: TypeScript / GDScript / C# / C++ / Blueprint]
+- **Game**: «Академия Звёздного Пера» — mobile 3D social sim on floating islands (see README.md)
+- **Engine**: Unity 6.3 LTS (6000.3), URP
+- **Language**: C#
+- **Target platform**: Android (min API 26, ARM64, IL2CPP, portrait, touch). AAB for Google Play.
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
+- **Build System**: Unity Editor; menu «Звёздное перо» in `Assets/_Project/Scripts/Editor/ProjectSetup.cs` (configure, build scene, build test APK)
+- **Asset Pipeline**: GLB via glTFast into `Assets/_Project/Art/Models/`; textures ≤ 1024 px for mobile
+- **Planned services**: Photon Fusion 2 (Shared, 50 per room), Unity Gaming Services (Auth, Cloud Save, Cloud Code, Remote Config), Unity IAP / Google Play Billing
+- **User language**: the owner writes in Russian — reply in Russian
 
 > **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
 > dedicated sub-specialists. Use the set matching your engine.
@@ -25,6 +29,7 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
      step and /project-settings (engine.name) write
      @docs/engine-reference/<engine>/VERSION.md here for the chosen engine. Skills
      that need the pinned version read that file on demand either way. -->
+@docs/engine-reference/unity/VERSION.md
 
 
 ## Technical Preferences

@@ -10,22 +10,22 @@
 
 ## Engine & Language
 
-- **Engine**: [TO BE CONFIGURED — run /setup-engine]
-- **Language**: [TO BE CONFIGURED]
-- **Rendering**: [TO BE CONFIGURED]
-- **Physics**: [TO BE CONFIGURED]
+- **Engine**: Unity 6.3 LTS (6000.3)
+- **Language**: C#
+- **Rendering**: URP (mobile asset, Linear color space)
+- **Physics**: PhysX (built-in 3D), CharacterController for the player
 
 ## Input & Platform
 
 <!-- Written by /setup-engine. Read by /ux-design, /ux-review, /test-setup, /team-ui, and /dev-story -->
 <!-- to scope interaction specs, test helpers, and implementation to the correct input methods. -->
 
-- **Target Platforms**: [TO BE CONFIGURED — e.g., PC, Console, Mobile, Web]
-- **Input Methods**: [TO BE CONFIGURED — e.g., Keyboard/Mouse, Gamepad, Touch, Mixed]
-- **Primary Input**: [TO BE CONFIGURED — the dominant input for this game]
-- **Gamepad Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Touch Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Platform Notes**: [TO BE CONFIGURED — any platform-specific UX constraints]
+- **Target Platforms**: Mobile (Android first, iOS later)
+- **Input Methods**: Touch (keyboard/mouse only for editor testing)
+- **Primary Input**: Touch: left virtual joystick, right swipe camera, action buttons
+- **Gamepad Support**: None
+- **Touch Support**: Full
+- **Platform Notes**: Portrait orientation; Input System package (new backend); UGUI for HUD
 
 ## Naming Conventions
 
