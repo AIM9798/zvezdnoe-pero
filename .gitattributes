@@ -27,3 +27,9 @@
 # .gitattributes governs the INDEX. It does not retro-fix a working tree that
 # predates the rule -- run `git add --renormalize .` for that.
 .claude/**/*.md text eol=lf
+
+# Unity / ассеты игры
+*.glb binary
+*.jpg binary
+*.png binary
+*.cs text eol=lf
